@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+  <script>
+    var cells = [];
+    var colours = [];
+    var numberOfColours = 3;
+    var grid;
+
+    var gridSize = 9;
+    var cellWidth = 50;
+
+    var dim = gridSize * cellWidth
+
+    function setup() {
+      createCanvas(dim, dim);
+      createRanodmColours(numberOfColours);
+
+      grid = new Grid();
+      grid.crete(gridSize, cellWidth);
+    }
+
+    function draw() {
+      background(255);
+      noStroke();
+      grid.show();
+    }
+
+    function createRanodmColours(numberOfColours) {
+      for (i = 0; i < numberOfColours; i++) {
+        colours.push(new Col(random(0, 255), random(0, 255), random(0, 255)));
+      }
+    }
+
+    function Grid() {
+
+      this.crete = function (size, cellWidth) {
+
+        var halfSize = size / 2;
+
+        for (var i = 0; i < size; i++) {
+          var n = 2;
+          for (var j = 0; j < size; j++) {
+            if (j < halfSize) {
+              var colour = colours[round(random(0, numberOfColours - 1))];
+              cells.push(new Cell(j * cellWidth, i * cellWidth, cellWidth, colour.r, colour.g, colour.b));
+            } else {
+              // var len = cells.length;
+              var index = cells.length - n;
+              cells.push(new Cell(j * cellWidth, i * cellWidth, cellWidth, cells[index].cr, cells[index].cg, cells[
+                index].cb));
+              n += 2;
+            }
+
+          }
+        }
+      };
+
+      this.show = function () {
+        for (i = 0; i < cells.length; i++) {
+          fill(cells[i].cr, cells[i].cg, cells[i].cb);
+          rect(cells[i].x, cells[i].y, cells[i].w, cells[i].w);
+        }
+      };
+    }
+
+    function Cell(x, y, w, cr, cg, cb) {
+      this.x = x;
+      this.y = y;
+      this.w = w;
+      this.cr = cr;
+      this.cg = cg;
+      this.cb = cb;
+    }
+
+    function Col(r, g, b) {
+      this.r = r;
+      this.g = g;
+      this.b = b;
+    }
+  </script>
+
+</head>
+
+<body>
+  <button onclick="window.location.reload()">Crete New Avatar</button>
+  <button onclick="save()">Save</button>
+</body>
+
+</html>
+<!-- 
+var img    = canvas.toDataURL("image/png");
+with the value in IMG you can write it out as a new Image like so:
+
+document.write('<img src="'+img+'"/>'); -->
